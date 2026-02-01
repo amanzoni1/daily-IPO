@@ -1,0 +1,29 @@
+name: Daily IPO Monitor
+
+on:
+  schedule:
+    # 05:00 UTC = 09:00 Dubai (UTC+4)
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Run Script
+        env:
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: python main.py
