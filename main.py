@@ -44,19 +44,7 @@ def parse_price_range(price_raw):
     except ValueError:
         return 0.0, 0.0
 
-def compute_offer_amount(price_raw, shares) -> float:
-    """
-    Offer amount per test spec: IPO price × shares. Uses HIGH end of range for filtering.
-    """
-    try:
-        shares_f = float(shares) if shares is not None else 0.0
-    except (TypeError, ValueError):
-        shares_f = 0.0
-
-    _, high = parse_price_range(price_raw)
-    return high * shares_f
-
-def compute_offer_range(price_raw, shares):
+def compute_offer(price_raw, shares):
     try:
         shares_f = float(shares) if shares is not None else 0.0
     except (TypeError, ValueError):
@@ -117,7 +105,7 @@ def run():
             if not symbol or price_raw in (None, "", "-") or shares in (None, ""):
                 continue
 
-            _, offer = compute_offer_range(price_raw, shares)
+            _, offer = compute_offer(price_raw, shares)
 
             # Debug
             print(
